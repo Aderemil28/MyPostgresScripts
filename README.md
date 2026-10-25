@@ -4,7 +4,7 @@ My personal PostgreSQL toolkit: monitoring, storage, maintenance, replication, s
 
 Every script has a header saying what it does, how to run it, whether it changes anything, and what it needs. Read-only scripts are safe to run any time; the few that change something say so in the **Changes** line.
 
-All scripts were run against PostgreSQL 16 (a primary and a streaming standby) during validation, both as a superuser and as a role with only `pg_monitor`. The two that need superuser for some sections say so in their header.
+All scripts were run against **PostgreSQL 18.6**, the current release (a primary and a streaming standby), both as a superuser and as a role with only `pg_monitor`. They were also run on PostgreSQL 16, and need 13 or later. The two that need superuser for some sections say so in their header.
 
 ## Monitoring
 

@@ -94,7 +94,7 @@ SHOW config_file;        -- postgresql.conf
 SHOW hba_file;           -- pg_hba.conf (who can connect, and how)
 SHOW data_directory;     -- the instance's files
 SHOW port;
-SHOW cluster_name;       -- empty unless set; Debian/Ubuntu set it to e.g. 16/main
+SHOW cluster_name;       -- empty unless set; Debian/Ubuntu set it to e.g. 18/main
 SHOW search_path;
 SHOW ALL;                -- every setting (long)
 
@@ -210,7 +210,8 @@ VACUUM (ANALYZE, VERBOSE) app.customer;                  -- clean dead rows and 
 ANALYZE app.customer;                                    -- statistics only (fast)
 REINDEX INDEX CONCURRENTLY app.customer_pkey;            -- rebuild without blocking writes (PostgreSQL 12 and later)
 
--- EXPLAIN ANALYZE really runs the statement. For INSERT, UPDATE or DELETE, wrap it so nothing changes:
+-- EXPLAIN ANALYZE really runs the statement. For INSERT, UPDATE or DELETE, wrap it so nothing changes.
+-- (From PostgreSQL 18, ANALYZE shows buffer counts without asking; BUFFERS still works on older versions.)
 BEGIN;
 EXPLAIN (ANALYZE, BUFFERS) UPDATE app.customer SET name = name WHERE customer_id = 1;
 ROLLBACK;
@@ -220,10 +221,10 @@ ROLLBACK;
 
 | Task | Command |
 |---|---|
-| Find psql if it isn't on the PATH | `"C:\Program Files\PostgreSQL\16\bin\psql.exe" -U postgres -d appdb` |
-| Default data directory (EDB installer) | `C:\Program Files\PostgreSQL\16\data` |
-| Service status / restart (PowerShell) | `Get-Service postgresql*` and `Restart-Service postgresql-x64-16` |
-| Service restart (cmd, as administrator) | `net stop postgresql-x64-16` then `net start postgresql-x64-16` |
+| Find psql if it isn't on the PATH | `"C:\Program Files\PostgreSQL\18\bin\psql.exe" -U postgres -d appdb` |
+| Default data directory (EDB installer) | `C:\Program Files\PostgreSQL\18\data` |
+| Service status / restart (PowerShell) | `Get-Service postgresql*` and `Restart-Service postgresql-x64-18` |
+| Service restart (cmd, as administrator) | `net stop postgresql-x64-18` then `net start postgresql-x64-18` |
 | Set the connection for this window (cmd) | `set PGHOST=db01` and `set PGUSER=app_user` |
 | Same in PowerShell | `$env:PGHOST = "db01"; $env:PGUSER = "app_user"` |
 | Show a variable from inside psql | `\! echo %PGHOST%` (cmd) |

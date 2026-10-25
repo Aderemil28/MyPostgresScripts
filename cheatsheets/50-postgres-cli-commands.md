@@ -10,7 +10,7 @@ Placeholders used throughout. Replace them with your own:
 | `5432` | Port |
 | `appdb` | Database |
 | `app_owner` | Role that owns the application objects |
-| `$PGDATA` | Data directory, for example `/var/lib/postgresql/16/main` on Ubuntu or `/var/lib/pgsql/16/data` on Red Hat |
+| `$PGDATA` | Data directory, for example `/var/lib/postgresql/18/main` on Ubuntu or `/var/lib/pgsql/18/data` on Red Hat |
 
 > [!TIP]
 > Set `PGHOST`, `PGPORT`, `PGUSER` and `PGDATABASE` once and most commands below no longer need `-h -p -U -d`:
@@ -135,9 +135,9 @@ psql -h db01 -U postgres -c "SELECT pg_reload_conf();"
 **16. Manage the service through systemd.** On a packaged install, use systemd rather than pg_ctl so the OS knows the state. Ubuntu names the unit after the version and cluster.
 
 ```bash
-sudo systemctl status postgresql@16-main      # Ubuntu / Debian
-sudo systemctl restart postgresql-16          # Red Hat family
-sudo journalctl -u postgresql@16-main --since "1 hour ago"
+sudo systemctl status postgresql@18-main      # Ubuntu / Debian
+sudo systemctl restart postgresql-18          # Red Hat family
+sudo journalctl -u postgresql@18-main --since "1 hour ago"
 ```
 
 **17. List the clusters on a Debian or Ubuntu server.** Shows version, port, status, data directory and log file for each.
@@ -160,10 +160,10 @@ pg_dump --version
 pg_config --version
 ```
 
-**20. Create a new cluster.** Turn on data checksums at creation: they detect storage corruption and can only be added later with the server stopped. The locale must be installed on the server (`locale -a` lists them).
+**20. Create a new cluster.** Data checksums detect storage corruption. From PostgreSQL 18 initdb turns them on by default (`--no-data-checksums` turns them off); on older versions add `--data-checksums`, because adding them later needs the server stopped. The locale must be installed on the server (`locale -a` lists them).
 
 ```bash
-initdb -D /var/lib/postgresql/16/newcluster --data-checksums --encoding=UTF8 --locale=en_US.UTF-8 --auth-local=peer --auth-host=scram-sha-256
+initdb -D /var/lib/postgresql/18/newcluster --data-checksums --encoding=UTF8 --locale=en_US.UTF-8 --auth-local=peer --auth-host=scram-sha-256
 ```
 
 ## Databases, roles and maintenance (21 to 30)
@@ -198,10 +198,11 @@ dropuser -h db01 -U postgres --if-exists report_user
 vacuumdb -h db01 -U postgres --all --analyze --jobs=4
 ```
 
-**26. Fresh statistics fast after an upgrade or restore.** Builds rough statistics first so the planner can work, then refines them.
+**26. Fresh statistics fast after an upgrade or restore.** Builds rough statistics first so the planner can work, then refines them. From PostgreSQL 18, pg_upgrade carries the statistics across, so add `--missing-stats-only` to analyze only what is missing.
 
 ```bash
-vacuumdb -h db01 -U postgres --all --analyze-in-stages
+vacuumdb -h db01 -U postgres --all --analyze-in-stages                        # after a restore, or an upgrade to 17 or earlier
+vacuumdb -h db01 -U postgres --all --analyze-in-stages --missing-stats-only   # after pg_upgrade to 18 or later
 ```
 
 **27. Vacuum one table and show what it did.**
@@ -210,7 +211,7 @@ vacuumdb -h db01 -U postgres --all --analyze-in-stages
 vacuumdb -h db01 -U postgres -d appdb --table='app.orders' --verbose --analyze
 ```
 
-**28. Rebuild indexes without blocking writes.** `--concurrently` (PostgreSQL 12 and later) takes longer but doesn't lock out the application.
+**28. Rebuild indexes without blocking writes.** `--concurrently` (PostgreSQL 12 and later) takes longer but doesn't lock out the application. It does wait for transactions that were already open when it started, so if it seems stuck, look for an old open transaction with [blocking-locks.sql](../monitoring/blocking-locks.sql).
 
 ```bash
 reindexdb -h db01 -U postgres -d appdb --table='app.orders' --concurrently
@@ -366,12 +367,12 @@ psql -X -h db01 -U postgres -c "SELECT pg_cancel_backend(12345);"
 psql -X -h db01 -U postgres -c "SELECT pg_terminate_backend(12345);"
 ```
 
-**50. Check a major version upgrade before doing it.** `--check` makes no changes: it reports incompatibilities between the old and new clusters. Both servers must be stopped for the real run.
+**50. Check a major version upgrade before doing it.** `--check` makes no changes: it reports incompatibilities between the old and new clusters. Run it with the **new** version's pg_upgrade. Both servers must be stopped for the real run.
 
 ```bash
-/usr/lib/postgresql/17/bin/pg_upgrade --check \
-    --old-bindir=/usr/lib/postgresql/16/bin --new-bindir=/usr/lib/postgresql/17/bin \
-    --old-datadir=/var/lib/postgresql/16/main --new-datadir=/var/lib/postgresql/17/main
+/usr/lib/postgresql/18/bin/pg_upgrade --check \
+    --old-bindir=/usr/lib/postgresql/17/bin --new-bindir=/usr/lib/postgresql/18/bin \
+    --old-datadir=/var/lib/postgresql/17/main --new-datadir=/var/lib/postgresql/18/main
 ```
 
 ## See also

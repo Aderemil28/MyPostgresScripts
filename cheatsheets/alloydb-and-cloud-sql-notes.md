@@ -2,6 +2,8 @@
 
 Both are managed PostgreSQL on Google Cloud. Most scripts in this repo work on them unchanged. These are the differences that matter day to day.
 
+**Versions:** both support PostgreSQL 18. Cloud SQL uses 18 for new instances; AlloyDB still defaults to 17, so set the version explicitly (the MyTerraformScripts modules default to 18).
+
 ## You are not a superuser
 
 - The admin role is `alloydbsuperuser` (AlloyDB) or `cloudsqlsuperuser` (Cloud SQL). It can create roles and databases but isn't a true superuser

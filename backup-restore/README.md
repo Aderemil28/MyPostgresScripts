@@ -41,7 +41,7 @@ psql -h db02 -U postgres -d appdb_restore -c "CREATE EXTENSION IF NOT EXISTS pg_
 pg_restore --list appdb.dump | grep -v " EXTENSION " > restore.list
 pg_restore -h db02 -U postgres -d appdb_restore -j 4 --no-owner --role=app_owner --exit-on-error -L restore.list appdb.dump
 
-# 4. Fresh planner statistics (pg_restore does not copy them)
+# 4. Fresh planner statistics. pg_dump leaves them out unless you dumped with --statistics (PostgreSQL 18+)
 psql -h db02 -U postgres -d appdb_restore -c "ANALYZE;"
 ```
 

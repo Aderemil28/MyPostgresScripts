@@ -2,7 +2,7 @@
 
 The server log is where PostgreSQL tells you about errors, slow queries, lock waits, connections and schema changes. Out of the box it logs very little and the files can grow without limit. These 10 parameters decide **where** the log goes, **how it rotates**, and **what goes in it**.
 
-Defaults below are PostgreSQL 16's. Check yours with [config/log-settings-check.sql](../config/log-settings-check.sql).
+Defaults below are PostgreSQL 18's. Check yours with [config/log-settings-check.sql](../config/log-settings-check.sql).
 
 | # | Parameter | Default | Recommended | Takes effect after |
 |---|---|---|---|---|
@@ -54,7 +54,7 @@ logging_collector = on        # needs a restart; the only parameter here that do
 ```
 
 > [!NOTE]
-> Debian and Ubuntu packages leave this `off` and write `/var/log/postgresql/postgresql-16-main.log` through their own wrapper and logrotate. That works, but you then manage rotation with logrotate rather than with parameters 4 to 7.
+> Debian and Ubuntu packages leave this `off` and write `/var/log/postgresql/postgresql-18-main.log` through their own wrapper and logrotate. That works, but you then manage rotation with logrotate rather than with parameters 4 to 7.
 
 ### 2. log_destination
 
@@ -75,7 +75,7 @@ log_destination = 'stderr'              # plain text, readable with tail and gre
 
 ```ini
 log_directory = 'log'                     # $PGDATA/log
-#log_directory = '/pglog/16/main'         # dedicated volume; must exist and be owned by postgres
+#log_directory = '/pglog/18/main'         # dedicated volume; must exist and be owned by postgres
 ```
 
 ## How it rotates (4 to 7)
@@ -182,7 +182,7 @@ log_statement = 'ddl'
 |---|---|---|
 | `log_lock_waits` | `on` | A line whenever a session waits longer than `deadlock_timeout` (1 s) for a lock, with who holds it |
 | `log_checkpoints` | `on` (default since 15) | Checkpoint timing and buffers written: shows I/O pressure |
-| `log_connections` / `log_disconnections` | `on` | Who connected from where, and session length. Often an audit requirement |
+| `log_connections` / `log_disconnections` | `on` | Who connected from where, and session length. Often an audit requirement. From PostgreSQL 18, `log_connections` takes a list of stages (`receipt`, `authentication`, `authorization`, `setup_durations`, or `all`); `on` still works and means the first three |
 | `log_autovacuum_min_duration` | `10s` | Autovacuum runs that take longer than 10 seconds, with what they cleaned |
 | `log_temp_files` | `10MB` | Queries spilling sorts or hashes to disk: candidates for `work_mem` or tuning |
 | `log_min_error_statement` | `error` (default) | The statement that caused each error |
