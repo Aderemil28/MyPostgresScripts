@@ -73,7 +73,7 @@ All scripts were run against PostgreSQL 16 (a primary and a streaming standby) d
 | [SQL Server to PostgreSQL](cheatsheets/sql-server-to-postgres.md) | Concepts, everyday DBA tasks, gotchas and T-SQL to PostgreSQL syntax |
 | [50 shell and CLI commands](cheatsheets/50-postgres-cli-commands.md) | Connecting, server control, maintenance, backup and restore, replication and troubleshooting, each with comments and usage |
 | [Log management parameters](cheatsheets/log-management-parameters.md) | The 10 parameters that decide where the log goes, how it rotates and what it records, with recommended values |
-| [psql quick reference](cheatsheets/psql-quick-reference.md) | Connecting, .pgpass, the backslash commands I use most |
+| [psql and SQL quick reference](cheatsheets/psql-quick-reference.md) | Backslash commands, session and server settings, databases, schemas and search_path, read-write grants, locking and dropping users, maintenance one-liners, Windows notes |
 | [AlloyDB and Cloud SQL notes](cheatsheets/alloydb-and-cloud-sql-notes.md) | What changes on managed PostgreSQL in Google Cloud |
 
 ## Running a script
