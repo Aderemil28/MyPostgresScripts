@@ -86,6 +86,7 @@ Most scripts need nothing more than the `pg_monitor` role. Grant it to a DBA log
 
 ## Related
 
+- [PostgreSQL Docs](https://github.com/Aderemil28/postgres-docs): my step-by-step PostgreSQL runbooks
 - [MySqlScripts](https://github.com/Aderemil28/MySqlScripts): my SQL Server toolkit
 - [MyTerraformScripts](https://github.com/Aderemil28/MyTerraformScripts): Terraform for AlloyDB and Cloud SQL for PostgreSQL
 - [SQL Server Docs](https://github.com/Aderemil28/sql-server-docs): my step-by-step runbooks
