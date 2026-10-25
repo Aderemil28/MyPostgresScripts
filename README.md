@@ -57,6 +57,7 @@ All scripts were run against PostgreSQL 16 (a primary and a streaming standby) d
 |---|---|
 | [server-overview.sql](config/server-overview.sql) | Version, uptime, primary or standby, memory settings, databases, extensions |
 | [settings-review.sql](config/settings-review.sql) | Non-default settings, pending restarts, config file errors, the review list |
+| [log-settings-check.sql](config/log-settings-check.sql) | Logging settings vs recommendations (OK / REVIEW), current log file, log files and sizes, ALTER SYSTEM block to apply them |
 
 ## Backup and restore
 
@@ -70,6 +71,8 @@ All scripts were run against PostgreSQL 16 (a primary and a streaming standby) d
 | Sheet | |
 |---|---|
 | [SQL Server to PostgreSQL](cheatsheets/sql-server-to-postgres.md) | Concepts, everyday DBA tasks, gotchas and T-SQL to PostgreSQL syntax |
+| [50 shell and CLI commands](cheatsheets/50-postgres-cli-commands.md) | Connecting, server control, maintenance, backup and restore, replication and troubleshooting, each with comments and usage |
+| [Log management parameters](cheatsheets/log-management-parameters.md) | The 10 parameters that decide where the log goes, how it rotates and what it records, with recommended values |
 | [psql quick reference](cheatsheets/psql-quick-reference.md) | Connecting, .pgpass, the backslash commands I use most |
 | [AlloyDB and Cloud SQL notes](cheatsheets/alloydb-and-cloud-sql-notes.md) | What changes on managed PostgreSQL in Google Cloud |
 

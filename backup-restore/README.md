@@ -35,7 +35,11 @@ createdb -h db02 -U postgres -O app_owner appdb_restore
 pg_restore -h db02 -U postgres -d appdb_restore -j 4 --exit-on-error appdb.dump
 
 # Restoring to a server where the original owners don't exist:
-pg_restore -h db02 -U postgres -d appdb_restore -j 4 --no-owner --role=app_owner appdb.dump
+# the database must be owned by that role, and an admin creates the extensions first
+createdb -h db02 -U postgres -O app_owner appdb_restore
+psql -h db02 -U postgres -d appdb_restore -c "CREATE EXTENSION IF NOT EXISTS pg_stat_statements;"
+pg_restore --list appdb.dump | grep -v " EXTENSION " > restore.list
+pg_restore -h db02 -U postgres -d appdb_restore -j 4 --no-owner --role=app_owner --exit-on-error -L restore.list appdb.dump
 
 # 4. Fresh planner statistics (pg_restore does not copy them)
 psql -h db02 -U postgres -d appdb_restore -c "ANALYZE;"
